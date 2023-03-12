@@ -31,7 +31,7 @@ o.sidescrolloff = 12
 o.termguicolors = true -- Pretty colors (24-bit)
 o.signcolumn    = 'yes'
 o.updatetime    = 50
-o.colorcolumn   = '100'
+o.colorcolumn   = '80,100'
 
 
 

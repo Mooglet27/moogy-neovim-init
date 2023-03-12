@@ -16,12 +16,15 @@ return require('packer').startup(function(use)
     -- Packer can handle itself
     use 'wbthomason/packer.nvim'
 
+    use 'nvim-tree/nvim-web-devicons'
+
     -- Telescope for fuzy finding
     use {
         'nvim-telescope/telescope.nvim', tag = '0.1.1',
         requires = {{'nvim-lua/plenary.nvim'}}
     }
-    
+    use 'nvim-telescope/telescope-file-browser.nvim'
+
     -- Trouble for showing diagnostics and results
     use {
         'folke/trouble.nvim',
@@ -54,7 +57,7 @@ return require('packer').startup(function(use)
         requires = { 'kyazdani42/nvim-web-devicons', opt = true }
     }
 
-    -- Float term (useful for lazygit)
+    -- Float term
     use 'voldikss/vim-floaterm'
 
     -- lsp zero
@@ -66,6 +69,7 @@ return require('packer').startup(function(use)
             {'neovim/nvim-lspconfig'},
             {'williamboman/mason.nvim'},
             {'williamboman/mason-lspconfig.nvim'},
+            {'simrat39/rust-tools.nvim'},
 
             -- Autocompletion
             {'hrsh7th/nvim-cmp'},
@@ -80,9 +84,6 @@ return require('packer').startup(function(use)
             {'rafamadriz/friendly-snippets'},
         }
     }
-
-    -- Git Support
-    use 'tpope/vim-fugitive'
 
     -- Auto setup your config after cloning
     if packer_bootstrap then
