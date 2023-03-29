@@ -28,19 +28,20 @@ return require('packer').startup(function(use)
     -- Trouble for showing diagnostics and results
     use {
         'folke/trouble.nvim',
-        requires = 'nvim-tree/nvim-web-devicons',
-        config = function()
-            require('trouble').setup {
-            }
-        end
+        requires = 'nvim-tree/nvim-web-devicons'
     }
+    use 'folke/lsp-colors.nvim'
 
     -- Tree-sitter
     use {'nvim-treesitter/nvim-treesitter', run = ':TSUpdate'}
 
+    -- python indent
+    -- treesitter fixed their python indents
+    -- use 'Vimjas/vim-python-pep8-indent'
+
     -- Undo tree
     use 'mbbill/undotree'
- 
+
     -- Harpoon
     use 'nvim-lua/plenary.nvim'
     use 'theprimeagen/harpoon'
@@ -52,13 +53,10 @@ return require('packer').startup(function(use)
     -- use 'gbprod/nord.nvim'
 
     -- All import line
-    use { 
+    use {
         'nvim-lualine/lualine.nvim',
         requires = { 'kyazdani42/nvim-web-devicons', opt = true }
     }
-
-    -- Float term
-    use 'voldikss/vim-floaterm'
 
     -- lsp zero
     use {
@@ -84,6 +82,11 @@ return require('packer').startup(function(use)
             {'rafamadriz/friendly-snippets'},
         }
     }
+
+    use {"akinsho/toggleterm.nvim", tag = '*'}
+
+    -- faster loading
+    use 'lewis6991/impatient.nvim'
 
     -- Auto setup your config after cloning
     if packer_bootstrap then

@@ -33,5 +33,9 @@ o.signcolumn    = 'yes'
 o.updatetime    = 50
 o.colorcolumn   = '80,100'
 
-
+-- No backups rely on undotree
+o.swapfile = false
+o.backup   = false
+o.undodir  = os.getenv("HOME") .. "/.local/state/nvim/undodir"
+o.undofile = true
 
