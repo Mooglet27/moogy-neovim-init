@@ -88,6 +88,18 @@ return require('packer').startup(function(use)
     -- faster loading
     use 'lewis6991/impatient.nvim'
 
+    -- C++ stuff
+    -- use {
+    --    requires = { "nvim-treesitter/nvim-treesitter" },
+    --    "Badhi/nvim-treesitter-cpp-tools",
+    -- }
+    -- potential
+    -- ThePrimeagen/refactoring.nvim
+    --
+
+    -- null-ls
+    use 'jose-elias-alvarez/null-ls.nvim'
+
     -- Auto setup your config after cloning
     if packer_bootstrap then
         require('packer').sync()

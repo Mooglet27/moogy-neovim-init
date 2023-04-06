@@ -39,3 +39,9 @@ o.backup   = false
 o.undodir  = os.getenv("HOME") .. "/.local/state/nvim/undodir"
 o.undofile = true
 
+-- mouse on for resizing
+o.mouse = 'a'
+
+-- always use system clipboard
+o.clipboard = "unnamedplus"
+

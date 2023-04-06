@@ -7,6 +7,7 @@ lsp.preset('recommended')
 lsp.ensure_installed({
     'rust_analyzer',
     'pyright',
+    'clangd',
 })
 
 lsp.skip_server_setup({'rust_analyzer'})
@@ -37,13 +38,16 @@ end
 
 lsp.configure('pyright', {
   before_init = function(_, config)
-    config.settings.python.pythonPath = get_python_path(config.root_dir)
+      local ppath = get_python_path(config.root_dir)
+      vim.g.python3_host_prog = ppath
+      config.settings.python.pythonPath = ppath
   end
 })
 
 
 lsp.on_attach(on_attach_f)
 lsp.setup_nvim_cmp({
+
     preselect = 'none',
     completion = {
         completeopt = 'menu,menuone,noinsert,noselect'
@@ -51,14 +55,60 @@ lsp.setup_nvim_cmp({
 })
 
 lsp.format_on_save({
+    format_opts = {
+        timeout_ms = 10000,
+    },
+    -- use null-ls for python
     servers = {
         ['rust_analyzer'] = {'rust'},
+        ['null-ls'] = {'python', 'json', 'javascript'},
     }
 })
-lsp.nvim_workspace()
 lsp.setup()
 
+
+-- null-ls for formating on save, needed because pyright doesn't support autofmt
+local null_ls = require('null-ls')
+
+null_ls.setup({
+    sources = {
+        null_ls.builtins.formatting.prettier,
+        null_ls.builtins.formatting.isort,
+        null_ls.builtins.formatting.black
+    }
+})
+
+
+-- let rust_tools handle the rust setup
 local rust_lsp = lsp.build_options('rust_analyzer', {
+    update_in_insert = true,
+    inlay_hints = true,
+    -- options same as lsp hover / vim.lsp.util.open_floating_preview()
+    hover_actions = {
+
+      -- the border that is used for the hover window
+      -- see vim.api.nvim_open_win()
+      border = {
+        { "╭", "FloatBorder" },
+        { "─", "FloatBorder" },
+        { "╮", "FloatBorder" },
+        { "│", "FloatBorder" },
+        { "╯", "FloatBorder" },
+        { "─", "FloatBorder" },
+        { "╰", "FloatBorder" },
+        { "│", "FloatBorder" },
+      },
+
+      -- Maximal width of the hover window. Nil means no max.
+      max_width = nil,
+
+      -- Maximal height of the hover window. Nil means no max.
+      max_height = nil,
+
+      -- whether the hover action window gets automatically focused
+      -- default: false
+      auto_focus = false,
+    },
     single_file_support = false,
     on_attach = on_attach_f
 })
