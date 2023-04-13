@@ -2,7 +2,7 @@ local lsp = require('lsp-zero')
 local util = require('lspconfig/util')
 local path = util.path
 
-lsp.preset('recommended')
+lsp.preset('minimal')
 
 lsp.ensure_installed({
     'rust_analyzer',
@@ -12,11 +12,12 @@ lsp.ensure_installed({
 
 lsp.skip_server_setup({'rust_analyzer'})
 
-local on_attach_f = function(client, bufnr)
+lsp.on_attach(function(client, bufnr)
     local opts = {buffer = bufnr, remap = false}
+    lsp.default_keymaps({buffer = bufnr})
     vim.keymap.set("n", "<leader>vc", function() vim.lsp.buf.code_action() end, opts)
     vim.keymap.set("n", "<leader>vr", function() vim.lsp.buf.rename() end, opts)
-end
+end)
 
 local function get_python_path(workspace)
   -- Use activated virtualenv.
@@ -44,16 +45,6 @@ lsp.configure('pyright', {
   end
 })
 
-
-lsp.on_attach(on_attach_f)
-lsp.setup_nvim_cmp({
-
-    preselect = 'none',
-    completion = {
-        completeopt = 'menu,menuone,noinsert,noselect'
-    },
-})
-
 lsp.format_on_save({
     format_opts = {
         timeout_ms = 10000,
@@ -64,6 +55,15 @@ lsp.format_on_save({
         ['null-ls'] = {'python', 'json', 'javascript'},
     }
 })
+
+lsp.set_sign_icons({
+  error = '✘',
+  warn = '',
+  hint = '',
+  info = '',
+})
+require('lspconfig').lua_ls.setup(lsp.nvim_lua_ls())
+
 lsp.setup()
 
 

@@ -61,27 +61,26 @@ return require('packer').startup(function(use)
     -- lsp zero
     use {
         'VonHeikemen/lsp-zero.nvim',
-        branch = 'v1.x',
+        branch = 'v2.x',
         requires = {
-            -- LSP Support
-            {'neovim/nvim-lspconfig'},
-            {'williamboman/mason.nvim'},
-            {'williamboman/mason-lspconfig.nvim'},
-            {'simrat39/rust-tools.nvim'},
+        -- LSP Support
+        {'neovim/nvim-lspconfig'},             -- Required
+        {                                      -- Optional
+            'williamboman/mason.nvim',
+            run = function()
+                pcall(vim.cmd, 'MasonUpdate')
+            end,
+        },
+        {'williamboman/mason-lspconfig.nvim'}, -- Optional
 
-            -- Autocompletion
-            {'hrsh7th/nvim-cmp'},
-            {'hrsh7th/cmp-nvim-lsp'},
-            {'hrsh7th/cmp-buffer'},
-            {'hrsh7th/cmp-path'},
-            {'saadparwaiz1/cmp_luasnip'},
-            {'hrsh7th/cmp-nvim-lua'},
-
-            -- Snippets
-            {'L3MON4D3/LuaSnip'},
-            {'rafamadriz/friendly-snippets'},
-        }
+        -- Autocompletion
+        {'hrsh7th/nvim-cmp'},     -- Required
+        {'hrsh7th/cmp-nvim-lsp'}, -- Required
+        {'L3MON4D3/LuaSnip'},     -- Required
+      }
     }
+
+    use {'simrat39/rust-tools.nvim'}
 
     use {"akinsho/toggleterm.nvim", tag = '*'}
 
@@ -100,6 +99,17 @@ return require('packer').startup(function(use)
     -- null-ls
     use 'jose-elias-alvarez/null-ls.nvim'
 
+    -- more completion stuff
+    use {'hrsh7th/cmp-buffer'}
+    use {'hrsh7th/cmp-path'}
+    use {'hrsh7th/cmp-nvim-lua'}
+    use {'rafamadriz/friendly-snippets'}
+    use {'hrsh7th/cmp-nvim-lsp-signature-help'}
+    use {'hrsh7th/cmp-nvim-lsp-document-symbol'}
+    use {
+        'windwp/nvim-autopairs',
+        config = function() require('nvim-autopairs').setup {} end
+    }
     -- Auto setup your config after cloning
     if packer_bootstrap then
         require('packer').sync()

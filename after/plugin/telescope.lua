@@ -25,7 +25,7 @@ tele.setup {
     },
 }
 tele.load_extension("file_browser")
-
+tele.load_extension("harpoon")
 vim.api.nvim_set_keymap("n",
     "<space>fb",
     ":Telescope file_browser<Enter>",
