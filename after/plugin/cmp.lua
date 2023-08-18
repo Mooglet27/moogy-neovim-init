@@ -19,7 +19,7 @@ cmp.setup({
         ['<C-f>'] = cmp_action.luasnip_jump_forward(),
         ['<C-b>'] = cmp_action.luasnip_jump_backward(),
         ['<C-e>'] = cmp.mapping.abort(),
-        ['<Tab>'] = cmp_action.luasnip_supertab(),
+        -- ['<Tab>'] = cmp_action.luasnip_supertab(),
         ['<S-Tab>'] = cmp_action.luasnip_shift_supertab(),
     }),
 })

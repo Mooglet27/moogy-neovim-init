@@ -8,6 +8,7 @@ lsp.ensure_installed({
     'rust_analyzer',
     'pyright',
     'clangd',
+    'tsserver',
 })
 
 lsp.skip_server_setup({'rust_analyzer'})
@@ -49,6 +50,8 @@ lsp.configure('clangd', {
     capabilities = {offsetEncoding = 'utf-8'}
 })
 
+
+
 lsp.format_on_save({
     format_opts = {
         timeout_ms = 10000,
@@ -56,7 +59,7 @@ lsp.format_on_save({
     -- use null-ls for python
     servers = {
         ['rust_analyzer'] = {'rust'},
-        ['null-ls'] = {'python', 'json', 'javascript', 'cpp'},
+        ['null-ls'] = {'python', 'json', 'javascript', 'cpp', 'html'},
     }
 })
 
