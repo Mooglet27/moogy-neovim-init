@@ -42,6 +42,15 @@ o.undofile = true
 -- mouse on for resizing
 o.mouse = 'a'
 
--- always use system clipboard
-o.clipboard = "unnamedplus"
-
+g.clipboard = {
+    name = 'WslClipboard',
+    copy = {
+        ["+"] = "clip.exe",
+        ["*"] = "clip.exe",
+    },
+    paste = {
+        ["+"] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+        ["*"] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+    },
+    cache_enabled = true,
+}
