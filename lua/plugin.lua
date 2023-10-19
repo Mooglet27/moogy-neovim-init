@@ -95,9 +95,7 @@ return require('packer').startup(function(use)
     -- potential
     -- ThePrimeagen/refactoring.nvim
     --
-
-    -- null-ls
-    use 'jose-elias-alvarez/null-ls.nvim'
+    use { 'mhartington/formatter.nvim' }
 
     -- more completion stuff
     use {'hrsh7th/cmp-buffer'}

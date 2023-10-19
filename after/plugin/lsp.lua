@@ -56,10 +56,8 @@ lsp.format_on_save({
     format_opts = {
         timeout_ms = 10000,
     },
-    -- use null-ls for python
     servers = {
         ['rust_analyzer'] = {'rust'},
-        ['null-ls'] = {'python', 'json', 'javascript', 'cpp', 'html'},
     }
 })
 
@@ -73,20 +71,6 @@ require('lspconfig').lua_ls.setup(lsp.nvim_lua_ls())
 
 lsp.setup()
 
-
--- null-ls for formating on save, needed because pyright doesn't support autofmt
-local null_ls = require('null-ls')
-local clang_config = vim.fn.stdpath('config') .. "/.clang-format"
-null_ls.setup({
-    sources = {
-        null_ls.builtins.formatting.prettier,
-        null_ls.builtins.formatting.isort,
-        null_ls.builtins.formatting.black,
-        null_ls.builtins.formatting.clang_format.with({
-            extra_args = {'-style=file:' .. clang_config},
-        }),
-    }
-})
 
 
 -- let rust_tools handle the rust setup
