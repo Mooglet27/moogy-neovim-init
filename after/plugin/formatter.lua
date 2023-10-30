@@ -9,6 +9,7 @@ require("formatter").setup({
 		},
 		python = {
 			require("formatter.filetypes.python").black,
+			require("formatter.filetypes.python").isort,
 		},
 		cpp = {
 			function()
@@ -30,7 +31,7 @@ require("formatter").setup({
 		json = {
 			require("formatter.filetypes.json").prettier,
 		},
-		md = {
+		markdown = {
 			require("formatter.filetypes.markdown").prettier,
 		},
 	},
