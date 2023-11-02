@@ -88,14 +88,7 @@ return require("packer").startup(function(use)
 	-- faster loading
 	use("lewis6991/impatient.nvim")
 
-	-- C++ stuff
-	-- use {
-	--    requires = { "nvim-treesitter/nvim-treesitter" },
-	--    "Badhi/nvim-treesitter-cpp-tools",
-	-- }
-	-- potential
-	-- ThePrimeagen/refactoring.nvim
-	--
+	-- automatic formatting
 	use({ "mhartington/formatter.nvim" })
 
 	-- more completion stuff
@@ -111,7 +104,6 @@ return require("packer").startup(function(use)
 			require("nvim-autopairs").setup({})
 		end,
 	})
-
 	use({
 		"iamcco/markdown-preview.nvim",
 		run = "cd app && npm install",
