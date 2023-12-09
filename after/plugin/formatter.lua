@@ -1,5 +1,18 @@
 local util = require("formatter.util")
 
+local clangd_cmd = function()
+	return {
+		exe = "clang-format",
+		args = {
+			'--style="{BasedOnStyle: Google, IndentWidth: 4}"',
+			"-assume-filename",
+			util.escape_path(util.get_current_buffer_file_name()),
+		},
+		stdin = true,
+		try_node_modules = true,
+	}
+end
+
 require("formatter").setup({
 	logging = true,
 	log_level = vim.log.levels.WARN,
@@ -11,20 +24,8 @@ require("formatter").setup({
 			require("formatter.filetypes.python").black,
 			require("formatter.filetypes.python").isort,
 		},
-		cpp = {
-			function()
-				return {
-					exe = "clang-format",
-					args = {
-						'--style="{BasedOnStyle: Google, IndentWidth: 4}"',
-						"-assume-filename",
-						util.escape_path(util.get_current_buffer_file_name()),
-					},
-					stdin = true,
-					try_node_modules = true,
-				}
-			end,
-		},
+		cpp = { clangd_cmd },
+		c = { clangd_cmd },
 		js = {
 			require("formatter.filetypes.javascript").prettier,
 		},

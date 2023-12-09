@@ -24,7 +24,7 @@ tele.setup({
 	extensions = {
 		file_browser = {
 			-- theme = "ivy",
-			hijack_netrw = true,
+            -- hijack_netrw = true,
 		},
 	},
 	pickers = {

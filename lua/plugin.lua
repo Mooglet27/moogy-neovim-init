@@ -21,7 +21,7 @@ return require("packer").startup(function(use)
 	-- Telescope for fuzy finding
 	use({
 		"nvim-telescope/telescope.nvim",
-		tag = "0.1.1",
+		tag = "0.1.4",
 		requires = { { "nvim-lua/plenary.nvim" } },
 	})
 	use("nvim-telescope/telescope-file-browser.nvim")
@@ -52,6 +52,7 @@ return require("packer").startup(function(use)
 	-- Some others I really like
 	-- use 'sainnhe/gruvbox-material'
 	-- use 'gbprod/nord.nvim'
+	-- use { "catppuccin/nvim", as = "catppuccin" }
 
 	-- All import line
 	use({
