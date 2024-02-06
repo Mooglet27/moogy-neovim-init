@@ -35,6 +35,9 @@ require("formatter").setup({
 		markdown = {
 			require("formatter.filetypes.markdown").prettier,
 		},
+		xml = {
+			require("formatter.filetypes.xml").xmllint,
+		},
 	},
 })
 
