@@ -115,7 +115,7 @@ return require("packer").startup(function(use)
 	})
 
 	-- Github Copilot Trial remove/cancel by August 26th
-	use({ "github/copilot.vim" })
+	-- use({ "github/copilot.vim" })
 	-- Auto setup your config after cloning
 	if packer_bootstrap then
 		require("packer").sync()

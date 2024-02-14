@@ -22,7 +22,20 @@ require("formatter").setup({
 		},
 		python = {
 			require("formatter.filetypes.python").black,
-			require("formatter.filetypes.python").isort,
+			function()
+				return {
+					exe = "isort",
+					args = {
+						"-q",
+						"--profile",
+						"black",
+						"--filename",
+						util.escape_path(util.get_current_buffer_file_path()),
+						"-",
+					},
+					stdin = true,
+				}
+			end,
 		},
 		cpp = { clangd_cmd },
 		c = { clangd_cmd },
