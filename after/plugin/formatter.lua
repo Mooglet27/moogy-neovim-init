@@ -39,7 +39,7 @@ require("formatter").setup({
 		},
 		cpp = { clangd_cmd },
 		c = { clangd_cmd },
-		js = {
+		javascript = {
 			require("formatter.filetypes.javascript").prettier,
 		},
 		json = {
@@ -50,6 +50,9 @@ require("formatter").setup({
 		},
 		xml = {
 			require("formatter.filetypes.xml").xmllint,
+		},
+		sh = {
+			require("formatter.filetypes.sh").shfmt,
 		},
 	},
 })
