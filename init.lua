@@ -1,7 +1,6 @@
--- require('impatient')
-require('plugin')
-require('config')
-require('keymap')
+require("impatient")
+require("plugin")
+require("config")
+require("keymap")
 
-vim.cmd[[colorscheme kanagawa]]
-
+vim.cmd([[colorscheme kanagawa]])

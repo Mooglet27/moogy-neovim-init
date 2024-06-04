@@ -78,7 +78,7 @@ return require("packer").startup(function(use)
 			-- Autocompletion
 			{ "hrsh7th/nvim-cmp" }, -- Required
 			{ "hrsh7th/cmp-nvim-lsp" }, -- Required
-			{ "L3MON4D3/LuaSnip" }, -- Required
+			{ "L3MON4D3/LuaSnip", tag = "v2.*", run = "make install_jsregexp" }, -- Required
 		},
 	})
 
@@ -113,6 +113,8 @@ return require("packer").startup(function(use)
 		end,
 		ft = { "markdown" },
 	})
+
+	use({ "windwp/nvim-ts-autotag" })
 
 	-- Github Copilot Trial remove/cancel by August 26th
 	-- use({ "github/copilot.vim" })

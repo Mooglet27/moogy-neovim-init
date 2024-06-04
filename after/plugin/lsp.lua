@@ -8,6 +8,7 @@ lsp.ensure_installed({
 	"rust_analyzer",
 	"pyright",
 	"clangd",
+	"ruff_lsp",
 })
 
 lsp.skip_server_setup({ "rust_analyzer" })
@@ -63,12 +64,26 @@ lsp.format_on_save({
 })
 
 lsp.set_sign_icons({
-	error = "✘",
-	warn = "",
+	error = "",
+	warn = "",
 	hint = "",
 	info = "",
 })
 require("lspconfig").lua_ls.setup(lsp.nvim_lua_ls())
+require("lspconfig").matlab_ls.setup({
+	single_file_support = true,
+	settings = {
+		MATLAB = {
+			indexWorkspace = true,
+			installPath = "/opt/matlab/r2023b",
+			matlabConnectionTiming = "onStart",
+			telemetry = true,
+		},
+	},
+})
+require("lspconfig").terraformls.setup({
+	root_dir = util.root_pattern("*.tf", "*.tfvars"),
+})
 
 lsp.setup()
 

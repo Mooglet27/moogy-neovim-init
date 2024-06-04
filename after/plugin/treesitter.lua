@@ -17,4 +17,8 @@ require("nvim-treesitter.configs").setup({
 		enabled = true,
 		--         disable = { "python" },
 	},
+
+	autotag = {
+		enable = true,
+	},
 })
