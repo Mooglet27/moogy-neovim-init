@@ -42,6 +42,15 @@ require("formatter").setup({
 		javascript = {
 			require("formatter.filetypes.javascript").prettier,
 		},
+		javascriptreact = {
+			require("formatter.filetypes.javascriptreact").prettier,
+		},
+		typescript = {
+			require("formatter.filetypes.typescript").prettier,
+		},
+		typescriptreact = {
+			require("formatter.filetypes.typescriptreact").prettier,
+		},
 		json = {
 			require("formatter.filetypes.json").prettier,
 		},
@@ -53,6 +62,9 @@ require("formatter").setup({
 		},
 		sh = {
 			require("formatter.filetypes.sh").shfmt,
+		},
+		html = {
+			require("formatter.filetypes.html").prettier,
 		},
 	},
 })

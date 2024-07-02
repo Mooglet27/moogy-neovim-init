@@ -50,10 +50,6 @@ lsp.configure("pyright", {
 	end,
 })
 
-lsp.configure("clangd", {
-	capabilities = { offsetEncoding = "utf-8" },
-})
-
 lsp.format_on_save({
 	format_opts = {
 		timeout_ms = 10000,
