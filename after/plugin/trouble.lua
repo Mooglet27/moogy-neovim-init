@@ -17,11 +17,19 @@ trouble.setup({
 		},
 	},
 	use_diagnostic_signs = true,
+	focus = true,
 })
 
-vim.keymap.set("n", "<leader>xn", function()
-	trouble.next({ skip_groups = true, jump = true })
-end, { silent = true, noremap = true })
-
-vim.keymap.set("n", "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", { silent = true, noremap = true })
-vim.keymap.set("n", "<leader>xq", "<cmd>Trouble qflist toggle<cr>", { silent = true, noremap = true })
+vim.keymap.set("n", "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", { desc = "Diagnostics (Trouble)" })
+vim.keymap.set(
+	"n",
+	"<leader>xX",
+	"<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
+	{ desc = "Current Buffer Diagnostics (Trouble)" }
+)
+vim.keymap.set(
+	"n",
+	"<leader>cl",
+	"<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
+	{ desc = "LSP Definitions / references / ... (Trouble)" }
+)

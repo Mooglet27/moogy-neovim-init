@@ -21,7 +21,7 @@ return require("packer").startup(function(use)
 	-- Telescope for fuzy finding
 	use({
 		"nvim-telescope/telescope.nvim",
-		tag = "0.1.4",
+		tag = "0.1.x",
 		requires = { { "nvim-lua/plenary.nvim" } },
 	})
 	use("nvim-telescope/telescope-file-browser.nvim")
@@ -50,9 +50,12 @@ return require("packer").startup(function(use)
 	-- Color Theme
 	use("rebelot/kanagawa.nvim")
 	-- Some others I really like
-	-- use 'sainnhe/gruvbox-material'
-	-- use 'gbprod/nord.nvim'
-	-- use { "catppuccin/nvim", as = "catppuccin" }
+	use("sainnhe/gruvbox-material")
+	use({ "folke/tokyonight.nvim" })
+	use({ "gbprod/nord.nvim" })
+	use({ "catppuccin/nvim", as = "catppuccin" })
+	use({ "sho-87/kanagawa-paper.nvim" })
+	use({ "EdenEast/nightfox.nvim" })
 
 	-- All import line
 	use({
@@ -63,26 +66,21 @@ return require("packer").startup(function(use)
 	-- lsp zero
 	use({
 		"VonHeikemen/lsp-zero.nvim",
-		branch = "v2.x",
+		branch = "v3.x",
 		requires = {
 			-- LSP Support
 			{ "neovim/nvim-lspconfig" }, -- Required
-			{ -- Optional
-				"williamboman/mason.nvim",
-				run = function()
-					pcall(vim.cmd, "MasonUpdate")
-				end,
-			},
-			{ "williamboman/mason-lspconfig.nvim" }, -- Optional
+			{ "williamboman/mason.nvim" },
+			{ "williamboman/mason-lspconfig.nvim" },
 
 			-- Autocompletion
 			{ "hrsh7th/nvim-cmp" }, -- Required
 			{ "hrsh7th/cmp-nvim-lsp" }, -- Required
-			{ "L3MON4D3/LuaSnip", tag = "v2.*", run = "make install_jsregexp" }, -- Required
+			{ "L3MON4D3/LuaSnip" }, -- Required
+			{ "saadparwaiz1/cmp_luasnip" },
+			{ "rafamadriz/friendly-snippets" },
 		},
 	})
-
-	use({ "simrat39/rust-tools.nvim" })
 
 	use({ "akinsho/toggleterm.nvim", tag = "*" })
 
@@ -96,13 +94,19 @@ return require("packer").startup(function(use)
 	use({ "hrsh7th/cmp-buffer" })
 	use({ "hrsh7th/cmp-path" })
 	use({ "hrsh7th/cmp-nvim-lua" })
-	use({ "rafamadriz/friendly-snippets" })
 	use({ "hrsh7th/cmp-nvim-lsp-signature-help" })
 	use({ "hrsh7th/cmp-nvim-lsp-document-symbol" })
 	use({
 		"windwp/nvim-autopairs",
 		config = function()
 			require("nvim-autopairs").setup({})
+		end,
+	})
+	use({
+		"windwp/nvim-ts-autotag",
+		ft = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
+		config = function()
+			require("nvim-ts-autotag").setup()
 		end,
 	})
 	use({
@@ -114,7 +118,8 @@ return require("packer").startup(function(use)
 		ft = { "markdown" },
 	})
 
-	use({ "windwp/nvim-ts-autotag" })
+	use({ "luckasRanarison/tailwind-tools.nvim" })
+	use({ "onsails/lspkind.nvim" })
 
 	-- Github Copilot Trial remove/cancel by August 26th
 	-- use({ "github/copilot.vim" })

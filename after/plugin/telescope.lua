@@ -1,7 +1,8 @@
 local builtin = require("telescope.builtin")
-local tele = require("telescope")
+local telescope = require("telescope")
 local actions = require("telescope.actions")
 local trouble = require("trouble.providers.telescope")
+local open_with_trouble = require("trouble.sources.telescope").open
 
 vim.keymap.set("n", "<leader>ff", builtin.find_files, {})
 vim.keymap.set("n", "<leader>pf", builtin.git_files, {})
@@ -10,8 +11,8 @@ vim.keymap.set("n", "<leader>gf", function()
 end)
 vim.keymap.set("n", "<leader>fg", builtin.grep_string, {})
 vim.keymap.set("n", "<leader>fs", builtin.current_buffer_fuzzy_find, {})
-vim.keymap.set("n", "<leader>la", builtin.diagnostics, {})
-vim.keymap.set("n", "<leader>ld", function()
+vim.keymap.set("n", "<leader>ld", builtin.diagnostics, {})
+vim.keymap.set("n", "<leader>lt", function()
 	builtin.diagnostics({ bufnr = 0 })
 end, {})
 -- list references
@@ -19,12 +20,12 @@ vim.keymap.set("n", "<leader>lr", builtin.lsp_references, {})
 vim.keymap.set("n", "<leader>lb", builtin.buffers, {})
 vim.keymap.set("n", "<leader>lc", builtin.commands, {})
 
-tele.load_extension("file_browser")
-tele.setup({
+telescope.load_extension("file_browser")
+telescope.setup({
 	extensions = {
 		file_browser = {
 			-- theme = "ivy",
-            -- hijack_netrw = true,
+			-- hijack_netrw = true,
 		},
 	},
 	pickers = {
