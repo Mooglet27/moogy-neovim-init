@@ -104,6 +104,11 @@ return {
                     vim.lsp.buf.rename()
                 end)
             end)
+            lsp_zero.format_on_save({
+                servers = {
+                    ["ruff_lsp"] = { "python" },
+                },
+            })
 
             require("mason-lspconfig").setup({
                 ensure_installed = {

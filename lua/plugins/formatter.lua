@@ -28,7 +28,7 @@ return {
         require("formatter").setup({
             filetype = {
                 python = {
-                    require(types .. "python").black,
+                    --    require(types .. "python").black,
                     function()
                         return {
                             exe = "isort",
