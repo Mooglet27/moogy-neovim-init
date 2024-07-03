@@ -1,6 +1,4 @@
-require("impatient")
-require("plugin")
-require("config")
-require("keymap")
-
-vim.cmd([[colorscheme kanagawa-paper]])
+-- require("impatient")
+require("config.lazy")
+require("config.basic")
+require("config.keymap")

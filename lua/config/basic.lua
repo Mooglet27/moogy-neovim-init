@@ -1,10 +1,6 @@
 local g = vim.g
 local o = vim.opt
 
--- Leader character
-g.mapleader = " "
-g.maplocalleader = ","
-
 -- Line Numbers, relative for hoping
 o.number = true
 o.relativenumber = true
