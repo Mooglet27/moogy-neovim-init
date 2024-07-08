@@ -34,7 +34,6 @@ return {
         vim.keymap.set("n", "<leader>lc", builtin.commands, {})
 
         telescope.load_extension("file_browser")
-
         telescope.setup({
             pickers = {
                 diagnostics = {
@@ -48,5 +47,13 @@ return {
                 },
             },
         })
+
+        vim.keymap.set("n", "<leader>fb", ":Telescope file_browser<Enter>", { noremap = true })
+        vim.keymap.set(
+            "n",
+            "<leader>ll",
+            ":Telescope file_browser path=%:p:h select_buffer=true <Enter>",
+            { noremap = true }
+        )
     end,
 }
