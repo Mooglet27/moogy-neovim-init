@@ -38,6 +38,7 @@ require("lazy").setup({
         {
             "mbbill/undotree",
             lazy = true,
+            event = "BufWritePost",
             config = function()
                 vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle, { desc = "undotree Toggling" })
             end,
@@ -59,6 +60,10 @@ require("lazy").setup({
             build = function()
                 vim.fn["mkdp#util#install"]()
             end,
+        },
+        {
+            "Vimjas/vim-python-pep8-indent",
+            ft = { "python" },
         },
 
         -- import more complex configs

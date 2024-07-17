@@ -19,12 +19,13 @@ return {
     -- Autocompletion
     {
         "hrsh7th/nvim-cmp",
-        event = "InsertEnter",
+        event = { "InsertEnter", "CmdlineEnter" },
         dependencies = {
             { "L3MON4D3/LuaSnip" },
             { "hrsh7th/cmp-nvim-lsp" },
             { "hrsh7th/cmp-buffer" },
             { "hrsh7th/cmp-path" },
+            { "hrsh7th/cmp-nvim-lsp-document-symbol" },
             { "saadparwaiz1/cmp_luasnip" },
             { "rafamadriz/friendly-snippets" },
             { "onsails/lspkind.nvim" },
@@ -41,6 +42,13 @@ return {
             local lspkind = require("lspkind")
 
             cmp.setup({
+                sources = {
+                    { name = "path" },
+                    { name = "nvim_lsp" },
+                    { name = "buffer", keyword_length = 4 },
+                    { name = "luasnip" },
+                },
+
                 formatting = {
                     format = lspkind.cmp_format({
                         before = require("tailwind-tools.cmp").lspkind_format,
@@ -65,6 +73,14 @@ return {
                         require("luasnip").lsp_expand(args.body)
                     end,
                 },
+            })
+            cmp.setup.cmdline("/", {
+                sources = cmp.config.sources({
+                    { name = "nvim_lsp_document_symbol" },
+                }, {
+                    { name = "buffer" },
+                }),
+                mapping = cmp.mapping.preset.cmdline(),
             })
         end,
     },
@@ -98,12 +114,13 @@ return {
 
                 vim.keymap.set("n", "<leader>vc", function()
                     vim.lsp.buf.code_action()
-                end)
+                end, { desc = "LSP code action" })
 
                 vim.keymap.set("n", "<leader>vr", function()
                     vim.lsp.buf.rename()
-                end)
+                end, { desc = "LSP variable rename" })
             end)
+
             lsp_zero.format_on_save({
                 servers = {
                     ["ruff_lsp"] = { "python" },
