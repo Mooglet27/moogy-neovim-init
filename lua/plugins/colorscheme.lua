@@ -1,4 +1,5 @@
 return {
+
     {
         "sho-87/kanagawa-paper.nvim",
         lazy = false,
@@ -18,8 +19,8 @@ return {
             vim.cmd([[colorscheme catppuccin]])
         end,
     },
-    --]=====]
 
+    --]=====]
     -- { "catppuccin/nvim", name = "catppuccin" },
     -- {"folke/tokyonight.nvim" },
     -- { "gbprod/nord.nvim" },

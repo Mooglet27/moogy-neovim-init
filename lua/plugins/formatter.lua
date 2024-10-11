@@ -92,6 +92,9 @@ return {
                 html = {
                     require(types .. "html").prettierd,
                 },
+                yaml = {
+                    require(types .. "yaml").prettierd,
+                },
             },
         })
     end,

@@ -18,6 +18,7 @@ return {
         },
         use_diagnostic_signs = true,
         focus = true,
+        auto_preview = true,
     }, -- for default options, refer to the configuration section for custom setup.
     cmd = "Trouble",
     keys = {

@@ -124,6 +124,7 @@ return {
             lsp_zero.format_on_save({
                 servers = {
                     ["ruff_lsp"] = { "python" },
+                    ["taplo"] = { "toml" },
                 },
             })
 
@@ -134,7 +135,7 @@ return {
                     "ruff_lsp",
                     "eslint",
                     "tailwindcss",
-                    "tsserver",
+                    "ts_ls",
                     "lua_ls",
                 },
                 handlers = {
