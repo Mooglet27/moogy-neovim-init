@@ -123,7 +123,7 @@ return {
 
             lsp_zero.format_on_save({
                 servers = {
-                    ["ruff_lsp"] = { "python" },
+                    ["ruff"] = { "python" },
                     ["taplo"] = { "toml" },
                 },
             })
@@ -132,7 +132,7 @@ return {
                 ensure_installed = {
                     "pyright",
                     "clangd",
-                    "ruff_lsp",
+                    "ruff",
                     "eslint",
                     "tailwindcss",
                     "ts_ls",
