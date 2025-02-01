@@ -125,6 +125,15 @@ return {
                 servers = {
                     ["ruff"] = { "python" },
                     ["taplo"] = { "toml" },
+                    ["gopls"] = { "go", "gomod" },
+                },
+            })
+
+            require("lspconfig").gopls.setup({
+                settings = {
+                    gopls = {
+                        gofumpt = true,
+                    },
                 },
             })
 
@@ -137,6 +146,7 @@ return {
                     "tailwindcss",
                     "ts_ls",
                     "lua_ls",
+                    "gopls",
                 },
                 handlers = {
                     -- this first function is the "default handler"
