@@ -1,7 +1,7 @@
 return {
     {
         "VonHeikemen/lsp-zero.nvim",
-        branch = "v3.x",
+        branch = "v4.x",
         lazy = true,
         config = false,
         init = function()
@@ -93,16 +93,47 @@ return {
         dependencies = {
             { "hrsh7th/cmp-nvim-lsp" },
             { "williamboman/mason-lspconfig.nvim" },
+            { "nvim-java/nvim-java" },
         },
+        init = function()
+            vim.opt.signcolumn = "yes"
+        end,
         config = function()
+            local lsp_defaults = require("lspconfig").util.default_config
+
+            -- Add cmp_nvim_lsp capabilities settings to lspconfig
+            -- This should be executed before you configure any language server
+            lsp_defaults.capabilities =
+                vim.tbl_deep_extend("force", lsp_defaults.capabilities, require("cmp_nvim_lsp").default_capabilities())
+
             -- This is where all the LSP shenanigans will live
             local lsp_zero = require("lsp-zero")
-            lsp_zero.extend_lspconfig()
+            -- lsp_zero.extend_lspconfig()
             lsp_zero.set_sign_icons({
                 error = "✘",
                 warn = "",
                 hint = "⚑",
                 info = "",
+            })
+
+            -- LspAttach is where you enable features that only work
+            -- if there is a language server active in the file
+            vim.api.nvim_create_autocmd("LspAttach", {
+                desc = "LSP actions",
+                callback = function(event)
+                    local opts = { buffer = event.buf }
+
+                    vim.keymap.set("n", "K", "<cmd>lua vim.lsp.buf.hover()<cr>", opts)
+                    vim.keymap.set("n", "gd", "<cmd>lua vim.lsp.buf.definition()<cr>", opts)
+                    vim.keymap.set("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<cr>", opts)
+                    vim.keymap.set("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<cr>", opts)
+                    vim.keymap.set("n", "go", "<cmd>lua vim.lsp.buf.type_definition()<cr>", opts)
+                    vim.keymap.set("n", "gr", "<cmd>lua vim.lsp.buf.references()<cr>", opts)
+                    vim.keymap.set("n", "gs", "<cmd>lua vim.lsp.buf.signature_help()<cr>", opts)
+                    vim.keymap.set("n", "<F2>", "<cmd>lua vim.lsp.buf.rename()<cr>", opts)
+                    vim.keymap.set({ "n", "x" }, "<F3>", "<cmd>lua vim.lsp.buf.format({async = true})<cr>", opts)
+                    vim.keymap.set("n", "<F4>", "<cmd>lua vim.lsp.buf.code_action()<cr>", opts)
+                end,
             })
 
             --- if you want to know more about lsp-zero and mason.nvim
@@ -137,6 +168,7 @@ return {
                     "tailwindcss",
                     "ts_ls",
                     "lua_ls",
+                    "jdtls",
                 },
                 handlers = {
                     -- this first function is the "default handler"
@@ -152,6 +184,16 @@ return {
                     end,
                 },
             })
+        end,
+    },
+    {
+        "nvim-java/nvim-java",
+        lazy = true,
+        ft = "java",
+        init = function()
+            -- setup java
+            require("java").setup()
+            require("lspconfig").jdtls.setup({})
         end,
     },
 }
