@@ -1,5 +1,6 @@
 return {
     "folke/trouble.nvim",
+    enabled = true,
     opts = {
         modes = {
             preview_float = {

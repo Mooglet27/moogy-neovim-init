@@ -78,9 +78,13 @@ local function update_virtual_text()
     local count = get_line_diagnostics_count()
     local should_show_virtual_text = count <= 1
 
-    vim.diagnostic.config({
+    -- Get current diagnostic config to preserve existing settings
+    local current_config = vim.diagnostic.config()
+
+    -- Only update virtual_text while preserving all other settings
+    vim.diagnostic.config(vim.tbl_deep_extend("force", current_config, {
         virtual_text = should_show_virtual_text and config.virtual_text or false,
-    })
+    }))
 end
 
 -- Function to handle cursor movement
@@ -112,22 +116,15 @@ function M.setup(user_config)
         config = vim.tbl_deep_extend("force", config, user_config)
     end
 
-    -- Configure diagnostics
-    vim.diagnostic.config({
+    -- Configure diagnostics while preserving existing settings
+    local current_config = vim.diagnostic.config()
+    vim.diagnostic.config(vim.tbl_deep_extend("force", current_config, {
         virtual_text = config.virtual_text,
-        signs = {
-            text = {
-                [vim.diagnostic.severity.ERROR] = "",
-                [vim.diagnostic.severity.WARN] = "",
-                [vim.diagnostic.severity.HINT] = "󱧡",
-                [vim.diagnostic.severity.INFO] = "󰙎",
-            },
-        },
         update_in_insert = false,
         underline = true,
         severity_sort = true,
         float = config.float_opts,
-    })
+    }))
 
     -- Create autocommand group
     local group = vim.api.nvim_create_augroup("DiagnosticsFloat", { clear = true })

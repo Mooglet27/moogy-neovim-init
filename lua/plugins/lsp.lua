@@ -1,20 +1,10 @@
 return {
     {
-        "VonHeikemen/lsp-zero.nvim",
-        branch = "v4.x",
-        lazy = true,
-        config = false,
-        init = function()
-            -- Disable automatic setup, we are doing it manually
-            vim.g.lsp_zero_extend_cmp = 0
-            vim.g.lsp_zero_extend_lspconfig = 0
-        end,
-    },
-    {
         "mason-org/mason.nvim",
         lazy = false,
         config = true,
         version = "1.11.0",
+        enabled = true,
     },
 
     -- Autocompletion
@@ -33,14 +23,9 @@ return {
             { "luckasRanarison/tailwind-tools.nvim" },
         },
         config = function()
-            -- Here is where you configure the autocompletion settings.
-            local lsp_zero = require("lsp-zero")
-            lsp_zero.extend_cmp()
-
-            -- And you can configure cmp even more, if you want to.
             local cmp = require("cmp")
-            local cmp_action = lsp_zero.cmp_action()
             local lspkind = require("lspkind")
+            local luasnip = require("luasnip")
 
             cmp.setup({
                 sources = {
@@ -66,12 +51,24 @@ return {
                     ["<C-Space>"] = cmp.mapping.complete(),
                     ["<C-u>"] = cmp.mapping.scroll_docs(-4),
                     ["<C-d>"] = cmp.mapping.scroll_docs(4),
-                    ["<C-f>"] = cmp_action.luasnip_jump_forward(),
-                    ["<C-b>"] = cmp_action.luasnip_jump_backward(),
+                    ["<C-f>"] = cmp.mapping(function(fallback)
+                        if luasnip.jumpable(1) then
+                            luasnip.jump(1)
+                        else
+                            fallback()
+                        end
+                    end, { "i", "s" }),
+                    ["<C-b>"] = cmp.mapping(function(fallback)
+                        if luasnip.jumpable(-1) then
+                            luasnip.jump(-1)
+                        else
+                            fallback()
+                        end
+                    end, { "i", "s" }),
                 }),
                 snippet = {
                     expand = function(args)
-                        require("luasnip").lsp_expand(args.body)
+                        luasnip.lsp_expand(args.body)
                     end,
                 },
             })
@@ -86,89 +83,12 @@ return {
         end,
     },
 
-    -- LSP
+    -- LSP using builtin vim.lsp.config API
     {
-        "neovim/nvim-lspconfig",
-        cmd = { "LspInfo", "LspInstall", "LspStart" },
-        event = { "BufReadPre", "BufNewFile" },
-        dependencies = {
-            { "hrsh7th/cmp-nvim-lsp" },
-            { "mason-org/mason-lspconfig.nvim", version = "1.32.0" },
-            { "nvim-java/nvim-java" },
-        },
-        init = function()
-            vim.opt.signcolumn = "yes"
-        end,
+        "mason-org/mason-lspconfig.nvim",
+        version = "1.32.0",
+        dependencies = { "mason-org/mason.nvim" },
         config = function()
-            local lsp_defaults = require("lspconfig").util.default_config
-
-            -- Add cmp_nvim_lsp capabilities settings to lspconfig
-            -- This should be executed before you configure any language server
-            lsp_defaults.capabilities =
-                vim.tbl_deep_extend("force", lsp_defaults.capabilities, require("cmp_nvim_lsp").default_capabilities())
-
-            -- This is where all the LSP shenanigans will live
-            local lsp_zero = require("lsp-zero")
-            -- lsp_zero.extend_lspconfig()
-            lsp_zero.set_sign_icons({
-                error = "",
-                warn = "",
-                hint = "󱧡",
-                info = "󰙎",
-            })
-
-            -- LspAttach is where you enable features that only work
-            -- if there is a language server active in the file
-            vim.api.nvim_create_autocmd("LspAttach", {
-                desc = "LSP actions",
-                callback = function(event)
-                    local opts = { buffer = event.buf }
-
-                    vim.keymap.set("n", "K", "<cmd>lua vim.lsp.buf.hover()<cr>", opts)
-                    vim.keymap.set("n", "gd", "<cmd>lua vim.lsp.buf.definition()<cr>", opts)
-                    vim.keymap.set("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<cr>", opts)
-                    vim.keymap.set("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<cr>", opts)
-                    vim.keymap.set("n", "go", "<cmd>lua vim.lsp.buf.type_definition()<cr>", opts)
-                    vim.keymap.set("n", "gr", "<cmd>lua vim.lsp.buf.references()<cr>", opts)
-                    vim.keymap.set("n", "gs", "<cmd>lua vim.lsp.buf.signature_help()<cr>", opts)
-                    vim.keymap.set("n", "<F2>", "<cmd>lua vim.lsp.buf.rename()<cr>", opts)
-                    vim.keymap.set({ "n", "x" }, "<F3>", "<cmd>lua vim.lsp.buf.format({async = true})<cr>", opts)
-                    vim.keymap.set("n", "<F4>", "<cmd>lua vim.lsp.buf.code_action()<cr>", opts)
-                end,
-            })
-
-            --- if you want to know more about lsp-zero and mason.nvim
-            --- read this: https://github.com/VonHeikemen/lsp-zero.nvim/blob/v3.x/doc/md/guides/integrate-with-mason-nvim.md
-            lsp_zero.on_attach(function(client, bufnr)
-                -- see :help lsp-zero-keybindings
-                -- to learn the available actions
-                lsp_zero.default_keymaps({ buffer = bufnr })
-
-                vim.keymap.set("n", "<leader>vc", function()
-                    vim.lsp.buf.code_action()
-                end, { desc = "LSP code action" })
-
-                vim.keymap.set("n", "<leader>vr", function()
-                    vim.lsp.buf.rename()
-                end, { desc = "LSP variable rename" })
-            end)
-
-            lsp_zero.format_on_save({
-                servers = {
-                    ["ruff"] = { "python" },
-                    ["taplo"] = { "toml" },
-                    ["gopls"] = { "go", "gomod" },
-                },
-            })
-
-            require("lspconfig").gopls.setup({
-                settings = {
-                    gopls = {
-                        gofumpt = true,
-                    },
-                },
-            })
-
             require("mason-lspconfig").setup({
                 ensure_installed = {
                     "pyright",
@@ -180,19 +100,283 @@ return {
                     "lua_ls",
                     "gopls",
                 },
-                handlers = {
-                    -- this first function is the "default handler"
-                    -- it applies to every language server without a "custom handler"
-                    function(server_name)
-                        require("lspconfig")[server_name].setup({})
-                    end,
+            })
+        end,
+    },
+    {
+        "hrsh7th/cmp-nvim-lsp",
+        lazy = true,
+    },
+    {
+        "neovim/nvim-lspconfig",
+        event = { "BufReadPre", "BufNewFile" },
+        dependencies = {
+            "hrsh7th/cmp-nvim-lsp",
+            "mason-org/mason-lspconfig.nvim",
+        },
+        config = function()
+            -- Get capabilities from nvim-cmp
+            local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-                    -- this is the "custom handler" for `lua_ls`
-                    lua_ls = function()
-                        local lua_opts = lsp_zero.nvim_lua_ls()
-                        require("lspconfig").lua_ls.setup(lua_opts)
-                    end,
+            -- Configure LSP servers using builtin vim.lsp.config
+            vim.lsp.config("pyright", {
+                cmd = { "pyright-langserver", "--stdio" },
+                filetypes = { "python" },
+                root_markers = {
+                    "pyproject.toml",
+                    "setup.py",
+                    "setup.cfg",
+                    "requirements.txt",
+                    "Pipfile",
+                    "pyrightconfig.json",
+                    ".git",
                 },
+                settings = {
+                    python = {
+                        analysis = {
+                            autoSearchPaths = true,
+                            useLibraryCodeForTypes = true,
+                            diagnosticMode = "workspace",
+                        },
+                    },
+                },
+                capabilities = capabilities,
+            })
+
+            vim.lsp.config("ruff", {
+                cmd = { "ruff", "server", "--preview" },
+                filetypes = { "python" },
+                root_markers = { "pyproject.toml", "ruff.toml", ".ruff.toml", ".git" },
+                capabilities = capabilities,
+            })
+
+            vim.lsp.config("clangd", {
+                cmd = { "clangd" },
+                filetypes = { "c", "cpp", "objc", "objcpp", "cuda", "proto" },
+                root_markers = {
+                    ".clangd",
+                    ".clang-tidy",
+                    ".clang-format",
+                    "compile_commands.json",
+                    "compile_flags.txt",
+                    "configure.ac",
+                    ".git",
+                },
+                capabilities = capabilities,
+            })
+
+            vim.lsp.config("eslint", {
+                cmd = { "vscode-eslint-language-server", "--stdio" },
+                filetypes = {
+                    "javascript",
+                    "javascriptreact",
+                    "javascript.jsx",
+                    "typescript",
+                    "typescriptreact",
+                    "typescript.tsx",
+                    "vue",
+                    "svelte",
+                    "astro",
+                },
+                root_markers = {
+                    ".eslintrc",
+                    ".eslintrc.js",
+                    ".eslintrc.cjs",
+                    ".eslintrc.yaml",
+                    ".eslintrc.yml",
+                    ".eslintrc.json",
+                    "eslint.config.js",
+                    "package.json",
+                    ".git",
+                },
+                capabilities = capabilities,
+            })
+
+            vim.lsp.config("tailwindcss", {
+                cmd = { "tailwindcss-language-server", "--stdio" },
+                filetypes = {
+                    "aspnetcorerazor",
+                    "astro",
+                    "astro-markdown",
+                    "blade",
+                    "clojure",
+                    "django-html",
+                    "htmldjango",
+                    "edge",
+                    "eelixir",
+                    "elixir",
+                    "ejs",
+                    "erb",
+                    "eruby",
+                    "gohtml",
+                    "gohtmltmpl",
+                    "haml",
+                    "handlebars",
+                    "hbs",
+                    "html",
+                    "html-eex",
+                    "heex",
+                    "jade",
+                    "leaf",
+                    "liquid",
+                    "markdown",
+                    "mdx",
+                    "mustache",
+                    "njk",
+                    "nunjucks",
+                    "php",
+                    "razor",
+                    "slim",
+                    "twig",
+                    "css",
+                    "less",
+                    "postcss",
+                    "sass",
+                    "scss",
+                    "stylus",
+                    "sugarss",
+                    "javascript",
+                    "javascriptreact",
+                    "reason",
+                    "rescript",
+                    "typescript",
+                    "typescriptreact",
+                    "vue",
+                    "svelte",
+                },
+                root_markers = {
+                    "tailwind.config.js",
+                    "tailwind.config.cjs",
+                    "tailwind.config.mjs",
+                    "tailwind.config.ts",
+                    "postcss.config.js",
+                    "postcss.config.cjs",
+                    "postcss.config.mjs",
+                    "postcss.config.ts",
+                    "package.json",
+                    "node_modules",
+                    ".git",
+                },
+                capabilities = capabilities,
+            })
+
+            vim.lsp.config("ts_ls", {
+                cmd = { "typescript-language-server", "--stdio" },
+                filetypes = {
+                    "javascript",
+                    "javascriptreact",
+                    "javascript.jsx",
+                    "typescript",
+                    "typescriptreact",
+                    "typescript.tsx",
+                },
+                root_markers = { "tsconfig.json", "package.json", "jsconfig.json", ".git" },
+                capabilities = capabilities,
+            })
+
+            vim.lsp.config("lua_ls", {
+                cmd = { "lua-language-server" },
+                filetypes = { "lua" },
+                root_markers = {
+                    ".luarc.json",
+                    ".luarc.jsonc",
+                    ".luacheckrc",
+                    ".stylua.toml",
+                    "stylua.toml",
+                    "selene.toml",
+                    "selene.yml",
+                    ".git",
+                },
+                settings = {
+                    Lua = {
+                        runtime = {
+                            version = "LuaJIT",
+                        },
+                        diagnostics = {
+                            globals = { "vim" },
+                        },
+                        workspace = {
+                            library = vim.api.nvim_get_runtime_file("", true),
+                            checkThirdParty = false,
+                        },
+                        telemetry = {
+                            enable = false,
+                        },
+                    },
+                },
+                capabilities = capabilities,
+            })
+
+            vim.lsp.config("gopls", {
+                cmd = { "gopls" },
+                filetypes = { "go", "gomod", "gowork", "gotmpl" },
+                root_markers = { "go.work", "go.mod", ".git" },
+                settings = {
+                    gopls = {
+                        gofumpt = true,
+                        analyses = {
+                            unusedparams = true,
+                        },
+                        staticcheck = true,
+                        usePlaceholders = true,
+                    },
+                },
+                capabilities = capabilities,
+            })
+
+            -- Enable all configured servers
+            vim.lsp.enable("pyright")
+            vim.lsp.enable("ruff")
+            vim.lsp.enable("clangd")
+            vim.lsp.enable("eslint")
+            vim.lsp.enable("tailwindcss")
+            vim.lsp.enable("ts_ls")
+            vim.lsp.enable("lua_ls")
+            vim.lsp.enable("gopls")
+
+            -- LSP keymaps and autocommands
+            vim.api.nvim_create_autocmd("LspAttach", {
+                desc = "LSP actions",
+                callback = function(event)
+                    local opts = { buffer = event.buf }
+
+                    vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+                    vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+                    vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
+                    vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
+                    vim.keymap.set("n", "go", vim.lsp.buf.type_definition, opts)
+                    vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+                    vim.keymap.set("n", "gs", vim.lsp.buf.signature_help, opts)
+                    vim.keymap.set("n", "<F2>", vim.lsp.buf.rename, opts)
+                    vim.keymap.set({ "n", "x" }, "<F3>", function()
+                        vim.lsp.buf.format({ async = true })
+                    end, opts)
+                    vim.keymap.set("n", "<F4>", vim.lsp.buf.code_action, opts)
+                    vim.keymap.set(
+                        "n",
+                        "<leader>vc",
+                        vim.lsp.buf.code_action,
+                        { desc = "LSP code action", buffer = event.buf }
+                    )
+                    vim.keymap.set(
+                        "n",
+                        "<leader>vr",
+                        vim.lsp.buf.rename,
+                        { desc = "LSP variable rename", buffer = event.buf }
+                    )
+
+                    -- Navigate diagnostics
+                    vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
+                    vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
+                end,
+            })
+
+            -- Format on save for specific filetypes
+            vim.api.nvim_create_autocmd("BufWritePre", {
+                pattern = { "*.py", "*.toml", "*.go", "*.mod" },
+                callback = function()
+                    vim.lsp.buf.format({ async = false })
+                end,
             })
         end,
     },
@@ -204,11 +388,11 @@ return {
         init = function()
             -- setup java
             require("java").setup()
-            require("lspconfig").jdtls.setup({})
         end,
     },
     {
         url = "https://gitlab.com/schrieveslaach/sonarlint.nvim",
+        enabled = true,
         ft = {
             "python",
             "javascript",

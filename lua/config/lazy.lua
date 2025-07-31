@@ -20,6 +20,17 @@ vim.opt.rtp:prepend(lazypath)
 -- This is also a good place to setup other settings (vim.opt)
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
+-- Configure diagnostic signs in an easily accessible location
+vim.diagnostic.config({
+    signs = {
+        text = {
+            [vim.diagnostic.severity.ERROR] = "",
+            [vim.diagnostic.severity.WARN] = "",
+            [vim.diagnostic.severity.HINT] = "󱧡",
+            [vim.diagnostic.severity.INFO] = "󰙎",
+        },
+    },
+})
 
 -- Setup lazy.nvim
 require("lazy").setup({
