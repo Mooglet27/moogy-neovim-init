@@ -10,7 +10,7 @@ return {
                     border = "rounded",
                     title = "Preview",
                     title_pos = "center",
-                    position = { 0, -2 },
+                    position = "top",
                     size = { width = 0.3, height = 0.3 },
                     zindex = 200,
                 },
@@ -24,7 +24,7 @@ return {
     keys = {
         {
             "<leader>xx",
-            "<cmd>Trouble diagnostics toggle<cr>",
+            "<cmd>Trouble diagnostics toggle win = { type = 'split', position = 'left', relative='editor' }<cr>",
             desc = "Diagnostics (Trouble)",
         },
         {

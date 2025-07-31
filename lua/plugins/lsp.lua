@@ -11,9 +11,10 @@ return {
         end,
     },
     {
-        "williamboman/mason.nvim",
+        "mason-org/mason.nvim",
         lazy = false,
         config = true,
+        version = "1.11.0",
     },
 
     -- Autocompletion
@@ -92,7 +93,7 @@ return {
         event = { "BufReadPre", "BufNewFile" },
         dependencies = {
             { "hrsh7th/cmp-nvim-lsp" },
-            { "williamboman/mason-lspconfig.nvim" },
+            { "mason-org/mason-lspconfig.nvim", version = "1.32.0" },
             { "nvim-java/nvim-java" },
         },
         init = function()
@@ -110,10 +111,10 @@ return {
             local lsp_zero = require("lsp-zero")
             -- lsp_zero.extend_lspconfig()
             lsp_zero.set_sign_icons({
-                error = "✘",
+                error = "",
                 warn = "",
-                hint = "⚑",
-                info = "",
+                hint = "󱧡",
+                info = "󰙎",
             })
 
             -- LspAttach is where you enable features that only work
@@ -177,7 +178,6 @@ return {
                     "tailwindcss",
                     "ts_ls",
                     "lua_ls",
-                    "jdtls",
                     "gopls",
                 },
                 handlers = {
@@ -200,10 +200,53 @@ return {
         "nvim-java/nvim-java",
         lazy = true,
         ft = "java",
+        enabled = false,
         init = function()
             -- setup java
             require("java").setup()
             require("lspconfig").jdtls.setup({})
+        end,
+    },
+    {
+        url = "https://gitlab.com/schrieveslaach/sonarlint.nvim",
+        ft = {
+            "python",
+            "javascript",
+            "typescript",
+            "html",
+            "typescriptreact",
+            "javascriptreact",
+            "cpp",
+            "c",
+        },
+        dependencies = {
+            { "lewis6991/gitsigns.nvim" },
+        },
+        config = function()
+            require("sonarlint").setup({
+                server = {
+                    cmd = {
+                        "sonarlint-language-server",
+                        "-stdio",
+                        "-analyzers",
+                        vim.fn.expand("$MASON/share/sonarlint-analyzers/sonarpython.jar"),
+                        vim.fn.expand("$MASON/share/sonarlint-analyzers/sonarjs.jar"),
+                        vim.fn.expand("$MASON/share/sonarlint-analyzers/sonarcfamily.jar"),
+                        vim.fn.expand("$MASON/share/sonarlint-analyzers/sonarhtml.jar"),
+                    },
+                },
+                filetypes = {
+                    "dockerfile",
+                    "python",
+                    "c",
+                    "cpp",
+                    "javascript",
+                    "typescript",
+                    "typescript",
+                    "typescriptreact",
+                    "html",
+                },
+            })
         end,
     },
 }

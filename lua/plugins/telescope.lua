@@ -22,6 +22,7 @@ return {
 
         vim.keymap.set("n", "<leader>ff", builtin.find_files, {})
         vim.keymap.set("n", "<leader>pf", builtin.git_files, {})
+        vim.keymap.set("n", "<leader>gl", builtin.live_grep, {})
         vim.keymap.set("n", "<leader>gf", builtin.grep_string, {})
         vim.keymap.set("n", "<leader>fs", cursor_wrap(builtin.current_buffer_fuzzy_find), {})
         vim.keymap.set("n", "<leader>ld", builtin.diagnostics, {})
@@ -32,6 +33,7 @@ return {
         vim.keymap.set("n", "<leader>lr", builtin.lsp_references, {})
         vim.keymap.set("n", "<leader>lb", builtin.buffers, {})
         vim.keymap.set("n", "<leader>lc", builtin.commands, {})
+        vim.keymap.set("n", "<leader>lp", builtin.planets, {})
 
         telescope.load_extension("file_browser")
         telescope.setup({

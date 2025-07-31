@@ -56,8 +56,9 @@ require("lazy").setup({
         {
             "iamcco/markdown-preview.nvim",
             cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
-            ft = { "markdown" },
+            ft = { "markdown", "md" },
             build = function()
+                vim.cmd([[Lazy load markdown-preview.nvim]])
                 vim.fn["mkdp#util#install"]()
             end,
         },

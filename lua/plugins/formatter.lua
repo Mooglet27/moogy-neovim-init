@@ -95,6 +95,11 @@ return {
                 yaml = {
                     require(types .. "yaml").prettierd,
                 },
+                -- java = {
+                --    require(types .. "java").clangformat,
+                -- },
+                java = { clangd_cmd },
+                css = { require(types .. "css").prettierd },
             },
         })
     end,
