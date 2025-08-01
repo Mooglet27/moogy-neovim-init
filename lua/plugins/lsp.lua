@@ -3,7 +3,7 @@ return {
         "mason-org/mason.nvim",
         lazy = false,
         config = true,
-        version = "1.11.0",
+        -- version = "1.11.0",
         enabled = true,
     },
 
@@ -102,10 +102,6 @@ return {
                 },
             })
         end,
-    },
-    {
-        "hrsh7th/cmp-nvim-lsp",
-        lazy = true,
     },
     {
         "neovim/nvim-lspconfig",
