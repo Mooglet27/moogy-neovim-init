@@ -38,6 +38,9 @@ o.undofile = true
 -- mouse on for resizing
 o.mouse = "a"
 
+-- Clipboard integration for WSL
+o.clipboard = "unnamedplus"
+
 vim.api.nvim_create_augroup("YankHighlight", { clear = true })
 vim.api.nvim_create_autocmd("TextYankPost", {
     group = "YankHighlight",
