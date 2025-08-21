@@ -20,20 +20,20 @@ return {
             end
         end
 
-        vim.keymap.set("n", "<leader>ff", builtin.find_files, {})
-        vim.keymap.set("n", "<leader>pf", builtin.git_files, {})
-        vim.keymap.set("n", "<leader>gl", builtin.live_grep, {})
-        vim.keymap.set("n", "<leader>gf", builtin.grep_string, {})
-        vim.keymap.set("n", "<leader>fs", cursor_wrap(builtin.current_buffer_fuzzy_find), {})
-        vim.keymap.set("n", "<leader>ld", builtin.diagnostics, {})
+        vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Find files" })
+        vim.keymap.set("n", "<leader>pf", builtin.git_files, { desc = "Find git files" })
+        vim.keymap.set("n", "<leader>gl", builtin.live_grep, { desc = "Live grep in project" })
+        vim.keymap.set("n", "<leader>gf", builtin.grep_string, { desc = "Grep word under cursor" })
+        vim.keymap.set("n", "<leader>fs", cursor_wrap(builtin.current_buffer_fuzzy_find), { desc = "Fuzzy find in current buffer" })
+        vim.keymap.set("n", "<leader>ld", builtin.diagnostics, { desc = "List all diagnostics" })
         vim.keymap.set("n", "<leader>lt", function()
             builtin.diagnostics({ bufnr = 0 })
-        end, {})
+        end, { desc = "List current buffer diagnostics" })
         -- list references
-        vim.keymap.set("n", "<leader>lr", builtin.lsp_references, {})
-        vim.keymap.set("n", "<leader>lb", builtin.buffers, {})
-        vim.keymap.set("n", "<leader>lc", builtin.commands, {})
-        vim.keymap.set("n", "<leader>lp", builtin.planets, {})
+        vim.keymap.set("n", "<leader>lr", builtin.lsp_references, { desc = "List LSP references" })
+        vim.keymap.set("n", "<leader>lb", builtin.buffers, { desc = "List open buffers" })
+        vim.keymap.set("n", "<leader>lc", builtin.commands, { desc = "List available commands" })
+        vim.keymap.set("n", "<leader>lp", builtin.planets, { desc = "Show planets (Easter egg)" })
 
         telescope.load_extension("file_browser")
         telescope.setup({
@@ -50,12 +50,12 @@ return {
             },
         })
 
-        vim.keymap.set("n", "<leader>fb", ":Telescope file_browser<Enter>", { noremap = true })
+        vim.keymap.set("n", "<leader>fb", ":Telescope file_browser<Enter>", { noremap = true, desc = "Open file browser" })
         vim.keymap.set(
             "n",
             "<leader>ll",
             ":Telescope file_browser path=%:p:h select_buffer=true <Enter>",
-            { noremap = true }
+            { noremap = true, desc = "Open file browser at current file location" }
         )
     end,
 }
