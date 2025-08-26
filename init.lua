@@ -1,7 +1,7 @@
 -- require("impatient")
 require("config.basic")
-require("config.keymap")
 require("config.lazy")
+require("config.keymap")
 require("config.diagnostics").setup({
     auto_show_treshold = 3,
     virtual_text = {
