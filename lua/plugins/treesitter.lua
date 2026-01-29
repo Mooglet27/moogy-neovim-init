@@ -18,6 +18,7 @@ return {
                 "typescript",
                 "tsx",
                 "json",
+                "java",
             },
             sync_install = false,
             highlight = { enable = true },

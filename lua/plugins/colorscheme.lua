@@ -19,12 +19,35 @@ return {
             vim.cmd([[colorscheme catppuccin]])
         end,
     },
-
     --]=====]
     -- { "catppuccin/nvim", name = "catppuccin" },
     -- {"folke/tokyonight.nvim" },
-    -- { "gbprod/nord.nvim" },
-    -- {"sainnhe/gruvbox-material"},
-    -- { "EdenEast/nightfox.nvim" },
+    --[=====[
+    {
+        "gbprod/nord.nvim",
+        name = "nord",
+        config = function()
+            vim.cmd([[colorscheme nord]])
+        end,
+    },
+    --]=====]
+
+    --[=====[
+    {
+        "sainnhe/gruvbox-material",
+        name = "gruvbox",
+        config = function()
+            vim.cmd([[colorscheme gruvbox-material]])
+        end,
+    },
+    --[=====[
+    {
+        "EdenEast/nightfox.nvim",
+        name = "nightfox",
+        config = function()
+            vim.cmd([[colorscheme nightfox]])
+        end,
+    },
+    --]=====]
     -- { "rebelot/kanagawa.nvim" }
 }

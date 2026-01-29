@@ -28,7 +28,7 @@ return {
         require("formatter").setup({
             filetype = {
                 python = {
-                    --    require(types .. "python").black,
+                    require(types .. "python").black,
                     function()
                         return {
                             exe = "isort",
@@ -100,6 +100,7 @@ return {
                 -- },
                 java = { clangd_cmd },
                 css = { require(types .. "css").prettierd },
+                perl = { require(types .. "perl").perltidy },
             },
         })
     end,

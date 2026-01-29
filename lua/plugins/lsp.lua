@@ -20,7 +20,7 @@ return {
             { "saadparwaiz1/cmp_luasnip" },
             { "rafamadriz/friendly-snippets" },
             { "onsails/lspkind.nvim" },
-            { "luckasRanarison/tailwind-tools.nvim" },
+            -- { "luckasRanarison/tailwind-tools.nvim" },
         },
         config = function()
             local cmp = require("cmp")
@@ -37,7 +37,7 @@ return {
 
                 formatting = {
                     format = lspkind.cmp_format({
-                        before = require("tailwind-tools.cmp").lspkind_format,
+                        -- before = require("tailwind-tools.cmp").lspkind_format,
                         mode = "symbol", -- show only symbol annotations
                         maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
                         -- can also be a function to dynamically calculate max width such as
@@ -99,6 +99,7 @@ return {
                     "ts_ls",
                     "lua_ls",
                     "gopls",
+                    "taplo",
                 },
             })
         end,
@@ -320,6 +321,13 @@ return {
                 capabilities = capabilities,
             })
 
+            vim.lsp.config("taplo", {
+                cmd = { "taplo", "lsp", "stdio" },
+                filetypes = { "toml" },
+                root_markers = { "*.toml", ".git" },
+                capabilities = capabilities,
+            })
+
             -- Enable all configured servers
             vim.lsp.enable("pyright")
             vim.lsp.enable("ruff")
@@ -329,6 +337,7 @@ return {
             vim.lsp.enable("ts_ls")
             vim.lsp.enable("lua_ls")
             vim.lsp.enable("gopls")
+            vim.lsp.enable("taplo")
 
             -- LSP keymaps and autocommands
             vim.api.nvim_create_autocmd("LspAttach", {
@@ -407,24 +416,18 @@ return {
                     )
 
                     -- Navigate diagnostics
-                    vim.keymap.set(
-                        "n",
-                        "[d",
-                        vim.diagnostic.goto_prev,
-                        vim.tbl_extend("force", opts, { desc = "Previous diagnostic" })
-                    )
-                    vim.keymap.set(
-                        "n",
-                        "]d",
-                        vim.diagnostic.goto_next,
-                        vim.tbl_extend("force", opts, { desc = "Next diagnostic" })
-                    )
+                    vim.keymap.set("n", "[d", function()
+                        vim.diagnostic.goto_prev({ float = false })
+                    end, vim.tbl_extend("force", opts, { desc = "Previous diagnostic" }))
+                    vim.keymap.set("n", "]d", function()
+                        vim.diagnostic.goto_next({ float = false })
+                    end, vim.tbl_extend("force", opts, { desc = "Next diagnostic" }))
                 end,
             })
 
             -- Format on save for specific filetypes
             vim.api.nvim_create_autocmd("BufWritePre", {
-                pattern = { "*.py", "*.toml", "*.go", "*.mod" },
+                pattern = { "*.toml", "*.go", "*.mod" },
                 callback = function()
                     vim.lsp.buf.format({ async = false })
                 end,
@@ -433,12 +436,9 @@ return {
     },
     {
         "nvim-java/nvim-java",
-        lazy = true,
-        ft = "java",
-        enabled = false,
-        init = function()
-            -- setup java
+        config = function()
             require("java").setup()
+            vim.lsp.enable("jdtls")
         end,
     },
     {
@@ -446,11 +446,11 @@ return {
         enabled = true,
         ft = {
             "python",
-            "javascript",
-            "typescript",
+            -- "javascript",
+            -- "typescript",
             "html",
-            "typescriptreact",
-            "javascriptreact",
+            -- "typescriptreact",
+            -- "javascriptreact",
             "cpp",
             "c",
         },
@@ -475,10 +475,10 @@ return {
                     "python",
                     "c",
                     "cpp",
-                    "javascript",
-                    "typescript",
-                    "typescript",
-                    "typescriptreact",
+                    -- "javascript",
+                    -- "typescript",
+                    -- "typescript",
+                    -- "typescriptreact",
                     "html",
                 },
             })

@@ -25,7 +25,7 @@ return {
     keys = {
         {
             "<leader>xx",
-            "<cmd>Trouble diagnostics toggle win = { type = 'split', position = 'left', relative='editor' }<cr>",
+            "<cmd>Trouble diagnostics toggle<cr>",
             desc = "Diagnostics (Trouble)",
         },
         {
