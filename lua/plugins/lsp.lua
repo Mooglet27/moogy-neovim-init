@@ -100,6 +100,8 @@ return {
                     "lua_ls",
                     "gopls",
                     "taplo",
+                    "matlab_ls",
+                    "dockerls",
                 },
             })
         end,
@@ -114,6 +116,21 @@ return {
         config = function()
             -- Get capabilities from nvim-cmp
             local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
+            -- Resolve the MATLAB installation root (dir containing bin/matlab).
+            -- Falls back to the first `matlab` found on PATH when no explicit
+            -- path is given.
+            local function matlab_install_path(explicit)
+                if explicit and explicit ~= "" then
+                    return explicit
+                end
+                local exe = vim.fn.exepath("matlab")
+                if exe == "" then
+                    return ""
+                end
+                -- Follow symlinks, then strip the trailing /bin/matlab
+                return vim.fn.fnamemodify(vim.fn.resolve(exe), ":h:h")
+            end
 
             -- Configure LSP servers using builtin vim.lsp.config
             vim.lsp.config("pyright", {
@@ -328,6 +345,34 @@ return {
                 capabilities = capabilities,
             })
 
+            vim.lsp.config("matlab_ls", {
+                cmd = { "matlab-language-server", "--stdio" },
+                filetypes = { "matlab" },
+                root_markers = { ".git" },
+                settings = {
+                    MATLAB = {
+                        indexWorkspace = false,
+                        -- MATLAB installation root (dir containing bin/matlab).
+                        -- Pass an explicit path to override, e.g.
+                        -- matlab_install_path("/opt/matlab/r2024b")
+                        installPath = matlab_install_path(),
+                        matlabConnectionTiming = "onStart",
+                        telemetry = true,
+                    },
+                },
+                capabilities = capabilities,
+            })
+
+            vim.lsp.config("dockerls", {
+                cmd = {
+                    vim.fn.stdpath("data") .. "/mason/bin/docker-langserver",
+                    "--stdio",
+                },
+                filetypes = { "dockerfile" },
+                root_markers = { "Dockerfile", ".git" },
+                capabilities = capabilities,
+            })
+
             -- Enable all configured servers
             vim.lsp.enable("pyright")
             vim.lsp.enable("ruff")
@@ -338,6 +383,8 @@ return {
             vim.lsp.enable("lua_ls")
             vim.lsp.enable("gopls")
             vim.lsp.enable("taplo")
+            vim.lsp.enable("matlab_ls")
+            vim.lsp.enable("dockerls")
 
             -- LSP keymaps and autocommands
             vim.api.nvim_create_autocmd("LspAttach", {
@@ -434,10 +481,43 @@ return {
             })
         end,
     },
+    -- Java. jdtls and its bundles (lombok, java-test, java-debug,
+    -- spring-boot-tools) are downloaded and wired up by nvim-java itself,
+    -- which is why jdtls is not in mason-lspconfig's ensure_installed above:
+    -- a second, mason managed jdtls would fight with this one.
     {
         "nvim-java/nvim-java",
+        lazy = false,
+        dependencies = { "hrsh7th/cmp-nvim-lsp" },
         config = function()
-            require("java").setup()
+            require("java").setup({
+                -- nvim-java downloads its own JDK to run the language server.
+                -- Set jdk = { auto_install = false } to use the `java` on
+                -- PATH instead; it has to be new enough for the pinned jdtls
+                -- (1.54.0 wants JDK 25) or the server refuses to start.
+            })
+
+            -- Merged on top of the config nvim-java registered during setup().
+            vim.lsp.config("jdtls", {
+                capabilities = require("cmp_nvim_lsp").default_capabilities(),
+                settings = {
+                    java = {
+                        signatureHelp = { enabled = true },
+                        -- Readable sources when jumping into a dependency
+                        -- that ships without a sources jar.
+                        contentProvider = { preferred = "fernflower" },
+                        configuration = { updateBuildConfiguration = "interactive" },
+                        sources = {
+                            organizeImports = {
+                                starThreshold = 9999,
+                                staticStarThreshold = 9999,
+                            },
+                        },
+                        format = { insertSpaces = true, tabSize = 4 },
+                    },
+                },
+            })
+
             vim.lsp.enable("jdtls")
         end,
     },
@@ -453,22 +533,39 @@ return {
             -- "javascriptreact",
             "cpp",
             "c",
+            "java",
         },
         dependencies = {
             { "lewis6991/gitsigns.nvim" },
         },
         config = function()
+            -- Pass only the analyzers that are actually on disk. Mason does
+            -- not ship every jar listed here (sonarcfamily, for one, arrives
+            -- as a bare .asc signature), and an -analyzers path that does not
+            -- exist is still handed to the server verbatim.
+            local mason = vim.env.MASON or (vim.fn.stdpath("data") .. "/mason")
+            local analyzer_dir = mason .. "/share/sonarlint-analyzers/"
+            local cmd = { "sonarlint-language-server", "-stdio", "-analyzers" }
+
+            for _, jar in ipairs({
+                "sonarpython.jar",
+                "sonarjs.jar",
+                "sonarcfamily.jar",
+                "sonarhtml.jar",
+                "sonarjava.jar",
+                -- Second java analyzer: the symbolic execution rules
+                -- (null dereference, resource leaks, dead code paths).
+                "sonarjavasymbolicexecution.jar",
+            }) do
+                local jar_path = analyzer_dir .. jar
+                if vim.fn.filereadable(jar_path) == 1 then
+                    table.insert(cmd, jar_path)
+                end
+            end
+
             require("sonarlint").setup({
                 server = {
-                    cmd = {
-                        "sonarlint-language-server",
-                        "-stdio",
-                        "-analyzers",
-                        vim.fn.expand("$MASON/share/sonarlint-analyzers/sonarpython.jar"),
-                        vim.fn.expand("$MASON/share/sonarlint-analyzers/sonarjs.jar"),
-                        vim.fn.expand("$MASON/share/sonarlint-analyzers/sonarcfamily.jar"),
-                        vim.fn.expand("$MASON/share/sonarlint-analyzers/sonarhtml.jar"),
-                    },
+                    cmd = cmd,
                 },
                 filetypes = {
                     "dockerfile",
@@ -480,6 +577,7 @@ return {
                     -- "typescript",
                     -- "typescriptreact",
                     "html",
+                    "java",
                 },
             })
         end,

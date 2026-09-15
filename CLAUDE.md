@@ -35,15 +35,21 @@ This is a Neovim configuration written in Lua, using the lazy.nvim plugin manage
 
 ### File-Type Specific Settings
 
-- `after/ftplugin/` - Language-specific configurations for tab widths and formatting
+- `after/ftplugin/` - Language-specific configurations for tab widths, formatting, and filetype-local keymaps (e.g. `<leader>J*` for nvim-java's build/run/test/refactor commands)
 
 ## Key Configuration Details
 
 ### LSP Setup
 
 - Uses modern `vim.lsp.config` API instead of lspconfig
-- Configured servers: pyright, ruff, clangd, eslint, tailwindcss, ts_ls, lua_ls, gopls
+- Configured servers: pyright, ruff, clangd, eslint, tailwindcss, ts_ls, lua_ls, gopls, taplo, matlab_ls, dockerls
 - Mason automatically installs language servers
+- Java (jdtls) is handled by `nvim-java`, not Mason: it downloads jdtls plus the
+  lombok, java-test, java-debug and spring-boot-tools bundles itself, so jdtls
+  must stay out of `mason-lspconfig`'s `ensure_installed` to avoid two competing
+  installs
+- Linting beyond the language servers comes from `sonarlint.nvim` (python, c,
+  cpp, html, dockerfile, java); it only receives analyzer jars that exist on disk
 - Format-on-save enabled for Python, TOML, and Go files
 
 ### Plugin Manager
@@ -61,7 +67,7 @@ This is a Neovim configuration written in Lua, using the lazy.nvim plugin manage
 ### Formatting
 
 - Automatic formatting via formatter.nvim
-- Language-specific formatters: isort (Python), stylua (Lua), prettierd (JS/TS/JSON/Markdown), clang-format (C/C++)
+- Language-specific formatters: isort (Python), stylua (Lua), prettierd (JS/TS/JSON/Markdown), clang-format (C/C++), google-java-format `--aosp` (Java)
 - Format-on-save autocommand
 
 ## Common Development Commands

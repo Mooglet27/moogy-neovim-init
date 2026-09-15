@@ -80,6 +80,9 @@ return {
                 json = {
                     require(types .. "json").prettierd,
                 },
+                jsonc = {
+                    require(types .. "json").prettier,
+                },
                 markdown = {
                     require(types .. "markdown").prettierd,
                 },
@@ -95,10 +98,19 @@ return {
                 yaml = {
                     require(types .. "yaml").prettierd,
                 },
-                -- java = {
-                --    require(types .. "java").clangformat,
-                -- },
-                java = { clangd_cmd },
+                -- google-java-format's AOSP profile is Google style at 4
+                -- spaces, which is what the old clang-format recipe was
+                -- approximating. Reading from `-` keeps this on stdin/stdout;
+                -- formatter.nvim's builtin recipe formats the file on disk.
+                java = {
+                    function()
+                        return {
+                            exe = "google-java-format",
+                            args = { "--aosp", "-" },
+                            stdin = true,
+                        }
+                    end,
+                },
                 css = { require(types .. "css").prettierd },
                 perl = { require(types .. "perl").perltidy },
             },
