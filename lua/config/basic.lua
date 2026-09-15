@@ -1,6 +1,10 @@
 local g = vim.g
 local o = vim.opt
 
+-- No plugins use the Perl or Ruby remote-plugin hosts
+g.loaded_perl_provider = 0
+g.loaded_ruby_provider = 0
+
 -- Line Numbers, relative for hoping
 o.number = true
 o.relativenumber = true

@@ -112,7 +112,6 @@ return {
                     end,
                 },
                 css = { require(types .. "css").prettierd },
-                perl = { require(types .. "perl").perltidy },
             },
         })
     end,
