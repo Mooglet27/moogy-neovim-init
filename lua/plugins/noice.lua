@@ -8,10 +8,6 @@ return {
     dependencies = {
         -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
         "MunifTanjim/nui.nvim",
-        -- OPTIONAL:
-        --   `nvim-notify` is only needed, if you want to use the notification view.
-        --   If not available, we use `mini` as the fallback
-        "rcarriga/nvim-notify",
     },
     config = function()
         require("noice").setup({
@@ -32,10 +28,17 @@ return {
             },
             messages = { enabled = false },
             popupmenu = { enabled = false },
+            -- Borderless single-line notifications in the bottom-right instead of nvim-notify toasts
+            notify = {
+                enabled = true,
+                view = "mini",
+            },
 
             lsp = {
                 progress = { enabled = false },
                 message = { enabled = false },
+                -- blink.cmp already shows signature help
+                signature = { enabled = false },
                 -- override markdown rendering so that LSP hover and other plugins use **Treesitter**
                 override = {
                     ["vim.lsp.util.convert_input_to_markdown_lines"] = true,

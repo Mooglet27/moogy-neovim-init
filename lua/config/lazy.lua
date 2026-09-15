@@ -113,6 +113,6 @@ require("lazy").setup({
     -- Configure any other settings here. See the documentation for more details.
     -- colorscheme that will be used when installing plugins.
     install = { colorscheme = { "kanagawa-paper" } },
-    -- automatically check for plugin updates
-    checker = { enabled = true },
+    -- automatically check for plugin updates; results show in :Lazy instead of a startup notification
+    checker = { enabled = true, notify = false },
 })
