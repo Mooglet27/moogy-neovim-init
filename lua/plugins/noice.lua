@@ -25,6 +25,12 @@ return {
                         height = "auto",
                     },
                 },
+                -- One row higher than the default so notifications sit above lualine
+                mini = {
+                    position = {
+                        row = -2,
+                    },
+                },
             },
             messages = { enabled = false },
             popupmenu = { enabled = false },
