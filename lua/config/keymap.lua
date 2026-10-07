@@ -47,3 +47,9 @@ vim.keymap.set("!", "<C-S-Left>", "<C-W>>", { desc = "Increase window width" })
 vim.keymap.set("!", "<C-S-Right>", "<C-W><", { desc = "Decrease window width" })
 vim.keymap.set("!", "<C-S-Up>", "<C-W>+", { desc = "Increase window height" })
 vim.keymap.set("!", "<C-S-Down>", "<C-W>-", { desc = "Decrease window height" })
+
+-- Toggle blink.cmp autocompletion for the current buffer
+vim.keymap.set("n", "<leader>ta", function()
+    vim.b.completion = vim.b.completion == false
+    vim.notify("Completion " .. (vim.b.completion and "enabled" or "disabled") .. " for this buffer")
+end, { desc = "Toggle completion in this buffer" })

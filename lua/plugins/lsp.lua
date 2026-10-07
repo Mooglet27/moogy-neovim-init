@@ -25,8 +25,16 @@ return {
                 default = { "lsp", "path", "snippets", "buffer" },
                 providers = {
                     buffer = { min_keyword_length = 4 },
+                    -- Drop friendly-snippets' global `all` set (copyright, date,
+                    -- time, shebang, ...) so it stops matching in every buffer
+                    snippets = { opts = { global_snippets = {} } },
                 },
             },
+            -- Honour `vim.b.completion = false` (set per buffer / toggled with
+            -- <leader>ta, and off by default in oil buffers)
+            enabled = function()
+                return vim.b.completion ~= false and vim.bo.buftype ~= "prompt"
+            end,
             completion = {
                 documentation = { auto_show = true, auto_show_delay_ms = 250 },
             },
@@ -387,11 +395,15 @@ return {
                         vim.lsp.buf.signature_help,
                         vim.tbl_extend("force", opts, { desc = "Show signature help" })
                     )
+                    -- inc-rename previews the rename live as you type
+                    local function inc_rename()
+                        return ":IncRename " .. vim.fn.expand("<cword>")
+                    end
                     vim.keymap.set(
                         "n",
                         "<F2>",
-                        vim.lsp.buf.rename,
-                        vim.tbl_extend("force", opts, { desc = "Rename symbol" })
+                        inc_rename,
+                        vim.tbl_extend("force", opts, { expr = true, desc = "Rename symbol" })
                     )
                     vim.keymap.set({ "n", "x" }, "<F3>", function()
                         vim.lsp.buf.format({ async = true })
@@ -411,8 +423,8 @@ return {
                     vim.keymap.set(
                         "n",
                         "<leader>vr",
-                        vim.lsp.buf.rename,
-                        { desc = "LSP variable rename", buffer = event.buf }
+                        inc_rename,
+                        { expr = true, desc = "LSP variable rename", buffer = event.buf }
                     )
 
                     -- Navigate diagnostics
